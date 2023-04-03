@@ -6,6 +6,8 @@ import Note from './components/Notes';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import *as NotesApi from "./Network/notes_api";
 import AddNoteDialog from './components/add_note';
+import {FaPlus} from "react-icons/fa";
+import AddEditNoteDialog from './components/add_note';
 
 
 ///*******
@@ -18,6 +20,7 @@ function App() {
 const [notes, setNotes]= useState<NoteModel[]>([]);
  
 const [showAddNoteDialog,setShowAddNoteDialog ]=useState(false)
+const [noteToEdit, setNoteToEdit]=useState<NoteModel|null>(null)
 
 useEffect( () => {
 
@@ -50,7 +53,8 @@ async function deleteNote(note:NoteModel) {
   return (
    
     <Container>
-      <Button  className={`mb-4 ${styles.blockCenter}`}  variant="secondary" size="lg" active onClick={()=>setShowAddNoteDialog(true)}>
+      <Button  className={`mb-4 ${styles.blockCenter} ${styles.flexCenter}`}  variant="secondary" size="lg" active onClick={()=>setShowAddNoteDialog(true)}>
+      <FaPlus/>
         Notiz hinzufügen
       </Button>
       <Row xs={2} md={2} xl={4} className="g-100">
@@ -60,6 +64,7 @@ async function deleteNote(note:NoteModel) {
       <Col key={note._id}>
       <Note 
       note={note} className={styles.note}
+      onNoteClicked={(note)=>setNoteToEdit(note)}
       onDeleteNoteClick={deleteNote}
       />
       </Col>
@@ -67,12 +72,12 @@ async function deleteNote(note:NoteModel) {
      </Row>
      {
       showAddNoteDialog&&
-      <AddNoteDialog 
+      <AddEditNoteDialog 
       onDismiss={ ()=>setShowAddNoteDialog(false) }
       onNoteSaved={(newNote)=>{
        // ich habe keine Lösung gefunden, momentan muss man die Seite refresen 4:29 im Video
         setNotes([...notes, 
-          //  newNote 
+           newNote 
         ])
       
         setShowAddNoteDialog(false)
@@ -80,6 +85,22 @@ async function deleteNote(note:NoteModel) {
       }}
       
       />
+     }
+     {noteToEdit&&
+     <AddEditNoteDialog
+     noteToEdit={noteToEdit}
+     onDismiss={()=>setNoteToEdit(null)}
+     onNoteSaved={(updatedNote)=>{
+      // ich habe keine Lösung gefunden, momentan muss man die Seite refresen 4:29 im Video
+       setNotes(notes.map(existingNote=>existingNote._id===updatedNote._id?updatedNote:existingNote))
+      setNoteToEdit(null
+        
+       )
+     
+       setShowAddNoteDialog(false)
+     
+     }}
+     />
      }
     </Container>
   );
