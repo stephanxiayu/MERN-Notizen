@@ -1,0 +1,34 @@
+
+.noteCard{
+    background-color:cornsilk;
+
+margin:5px;
+
+
+}
+
+.cardBody{
+    overflow:hidden;
+    mask-image:linear-gradient(180deg, #000 60%, transparent);
+}
+.cardText{
+    white-space: pre-line;
+}
+
+.cardTime{
+    height: 20px;
+}
+
+
+.blockCenter{
+    display: block;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.flexCenter{
+    display:flex;
+    align-items:right;
+    justify-content:right;
+    gap: 4px;
+}
