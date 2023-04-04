@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/Pages/createNotePage.dart';
 import 'package:mobile/Pages/updateNotePage.dart';
 import 'package:intl/intl.dart';
 
@@ -38,10 +40,24 @@ class _NoteListState extends State<NoteList> {
     final url = Uri.parse('http://localhost:8080/api/notes/$id');
     final response = await http.delete(url);
 
-    if (response.statusCode == 200) {
-      print('Note deleted successfully');
+    if (response.statusCode == 204) {
+      Fluttertoast.showToast(
+          msg: 'Note gelöscht ',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
     } else {
-      throw Exception('Failed to delete note');
+      Fluttertoast.showToast(
+          msg: 'Fehler in der Matrix',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -115,6 +131,12 @@ class _NoteListState extends State<NoteList> {
                                     setState(() {
                                       deleteNote(notes[index]['_id']);
                                       Navigator.of(context).pop();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const NoteList()),
+                                      );
                                     });
                                   },
                                 ),
@@ -135,7 +157,12 @@ class _NoteListState extends State<NoteList> {
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 215, 195, 137),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateNotePage()),
+            );
+          },
           child: const Icon(Icons.add)),
     );
   }
