@@ -18,31 +18,45 @@ class UpdateNotePage extends StatefulWidget {
 
 class _UpdateNotePageState extends State<UpdateNotePage> {
   List<dynamic> notes = [];
-  Future<void> updateNotes() async {
-    print("***** print test ");
-    print(widget.id);
-    final url = 'http://localhost:8080/api/notes/${widget.id}';
+  Future<void> updateNote(String id, String title, String text) async {
+    final url = 'http://localhost:8080/api/notes/$id';
     final response = await http.patch(
       Uri.parse(url),
-      body: {
-        '_id': widget.id,
-        'title': titleController.text,
-        'text': textController.text,
-        // 'updatedAt': datum,
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: jsonEncode({
+        'title': title,
+        'text': text,
+      }),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final List<dynamic> data = json.decode(response.body);
+      final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
-        notes = data;
+        // update the note in your state
+        // assuming you have a 'notes' list that contains all your notes
+        final noteIndex = notes.isNotEmpty
+            ? notes.indexWhere((note) => note['_id'] == id)
+            : -1;
+        if (noteIndex >= 0) {
+          notes[noteIndex] = data;
+        }
       });
-    } else {
       Fluttertoast.showToast(
-          msg: 'Failed to update notes',
+          msg: 'Note updated ',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Failed to update note',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 16.0);
@@ -54,6 +68,7 @@ class _UpdateNotePageState extends State<UpdateNotePage> {
   @override
   void initState() {
     super.initState();
+    notes = [];
     titleController.text = widget.title;
     textController.text = widget.text;
   }
@@ -67,20 +82,39 @@ class _UpdateNotePageState extends State<UpdateNotePage> {
       body: Column(
         children: [
           TextFormField(
+            style: const TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white, width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              filled: true,
+              fillColor: const Color.fromARGB(255, 215, 195, 137),
+            ),
             controller: titleController,
           ),
           TextFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white, width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              filled: true,
+              fillColor: const Color.fromARGB(255, 215, 195, 137),
+            ),
+            style: const TextStyle(color: Colors.black),
             maxLines: 10,
             controller: textController,
             minLines: 6,
           ),
           TextButton.icon(
               onPressed: () {
-                updateNotes().then((value) => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NoteList(),
-                    )));
+                updateNote(widget.id, titleController.text, textController.text)
+                    .then((value) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NoteList(),
+                        )));
               },
               icon: const Icon(Icons.save),
               label: const Text("Save"))
