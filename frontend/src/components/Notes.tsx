@@ -33,26 +33,28 @@ return (
      onClick={()=>onNoteClicked(note)}
      >
         <Card.Body className={stlyes.cardBody}>
-            <Card.Title className={stlyes.flexCenter}>
+            <Card.Title className={stlyes.cardText}>
                 {title}
-                <MdDelete 
-                className="text-muted ms-auto"
-                onClick={(e)=>{
-                    onDeleteNoteClick(note)
-                        e.stopPropagation()
-                }}
-                >
-
-                </MdDelete>
+            
             </Card.Title>
             <Card.Text className={stlyes.cardText}>
                 {text}
             </Card.Text>
             
         </Card.Body>
-        <Card.Footer className="text-muted">
-                {createdUpdatedText}
-            </Card.Footer>
+        <Card.Footer className="d-flex text-muted">
+    {createdUpdatedText}
+    <div className="ms-auto">
+        <MdDelete 
+            className="text-muted"
+            onClick={(e) => {
+                onDeleteNoteClick(note);
+                e.stopPropagation();
+            }}
+        />
+    </div>
+</Card.Footer>
+
     </Card>
 )
 }
