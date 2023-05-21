@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/Pages/NoteList.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'Pages/LoginPage.dart';
+import 'Pages/NoteList.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool? isLoggedIn = prefs.getBool('isLoggedIn');
+
+  runApp(MyApp(isLoggedIn: isLoggedIn ?? false));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
 
-  // This widget is the root of your application.
+  const MyApp({super.key, required this.isLoggedIn});
+
   @override
   Widget build(BuildContext context) {
+    print("isLoggedIn == true??? $isLoggedIn");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Your App',
       theme: ThemeData.dark(),
-      home: const NoteList(),
+      home: isLoggedIn ? const NoteList() : const LoginForm(),
     );
   }
 }

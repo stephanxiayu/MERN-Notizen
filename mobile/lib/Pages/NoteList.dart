@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/Pages/LoginPage.dart';
 import 'package:mobile/Pages/createNotePage.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/Pages/updateNotePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NoteList extends StatefulWidget {
   const NoteList({super.key});
@@ -33,6 +35,37 @@ class _NoteListState extends State<NoteList> {
       });
     } else {
       throw Exception('Failed to fetch notes');
+    }
+  }
+
+  Future<void> _logout() async {
+    const url =
+        'http://localhost:8080/api/user/logout'; // replace with your server URL
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Removes the user token from storage
+
+      await prefs.setBool('isLoggedIn', false);
+
+      // After removing the token, you could navigate the user to the login page
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const LoginForm()));
+      print('Logged out successfully');
+    } else {
+      // If the server did not return a 200 OK response,
+      print(response.body);
+      print(response.statusCode);
+      throw Exception('Failed to logout');
     }
   }
 
@@ -71,6 +104,13 @@ class _NoteListState extends State<NoteList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notes'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _logout();
+              },
+              icon: const Icon(Icons.exit_to_app))
+        ],
       ),
       body: GridView.builder(
         itemCount: notes.length,
