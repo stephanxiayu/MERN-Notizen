@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mobile/Pages/createAccountPage.dart';
+import 'package:mobile/Pages/LoginPage.dart';
 import 'dart:convert';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:mobile/Pages/NoteList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'NoteList.dart';
-
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class CreateAccount extends StatefulWidget {
+  const CreateAccount({super.key});
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _CreateAccountState createState() => _CreateAccountState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _CreateAccountState extends State<CreateAccount> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Future<void> _login() async {
+  Future<void> signIn() async {
     const url =
-        'http://localhost:8080/api/user/login'; // replace with your server URL
+        'http://localhost:8080/api/user/signup'; // replace with your server URL
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode({
         'username': _usernameController.text.trim(),
-        // 'email': _emailController.text.trim(),
+        'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
       }),
       headers: {'Content-Type': 'application/json'},
@@ -127,6 +126,29 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: const TextStyle(color: Colors.grey),
+                          focusColor: Colors.yellow.shade700,
+                          border: const OutlineInputBorder(),
+                          prefixIcon: const Icon(
+                            Icons.account_circle,
+                            color: Colors.yellow,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.yellow, width: 2.0)),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
                         controller: _passwordController,
                         obscureText: true,
                         decoration: const InputDecoration(
@@ -153,7 +175,7 @@ class _LoginFormState extends State<LoginForm> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            _login().catchError((error) {
+                            signIn().catchError((error) {
                               // Handle the error here
                               print('Login failed with error: $error');
                               motionToastLoginError();
@@ -172,9 +194,9 @@ class _LoginFormState extends State<LoginForm> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 20.0),
                           child: Text(
-                            'Login',
+                            'Kostenloses Konto erstellen',
                             style: TextStyle(
-                              fontSize: 30.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                               foreground: Paint()
                                 ..shader = const LinearGradient(
@@ -197,7 +219,7 @@ class _LoginFormState extends State<LoginForm> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const CreateAccount(),
+                                builder: (context) => const LoginForm(),
                               ));
                         },
                         style: ElevatedButton.styleFrom(
@@ -211,7 +233,7 @@ class _LoginFormState extends State<LoginForm> {
                           padding: EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 20.0),
                           child: Text(
-                            'Konto kostenlos erstellen',
+                            'Login-Seite',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 10.0,

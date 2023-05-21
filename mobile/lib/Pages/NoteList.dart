@@ -102,14 +102,36 @@ class _NoteListState extends State<NoteList> {
     final f = DateFormat('yyyy-MM-dd hh:mm');
 
     return Scaffold(
+      backgroundColor: Colors.black87,
       appBar: AppBar(
-        title: const Text('Notes'),
+        backgroundColor: Colors.black87,
+        title: Text(
+          "Meine Notizen",
+          style: TextStyle(
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+            foreground: Paint()
+              ..shader = const LinearGradient(
+                colors: <Color>[
+                  Colors.orangeAccent,
+                  Colors.yellowAccent,
+                  Colors.yellow,
+                  Colors.yellowAccent,
+                  Colors.orangeAccent
+                  //add more color here.
+                ],
+              ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0)),
+          ),
+        ),
         actions: [
           IconButton(
               onPressed: () {
                 _logout();
               },
-              icon: const Icon(Icons.exit_to_app))
+              icon: const Icon(
+                Icons.exit_to_app,
+                color: Colors.yellow,
+              ))
         ],
       ),
       body: GridView.builder(
@@ -162,17 +184,27 @@ class _NoteListState extends State<NoteList> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('Delete note'),
+                                backgroundColor: Colors.black87,
+                                title: const Text(
+                                  'Notiz löschen?',
+                                  style: TextStyle(color: Colors.yellowAccent),
+                                ),
                                 content: const Text(
-                                    'Are you sure you want to delete this note?'),
+                                    'Bist du sicher, dass du die Notiz löschen möchtest'),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: const Text('Cancel'),
+                                    child: const Text(
+                                      'abbrechen',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
                                   ),
                                   TextButton(
-                                    child: const Text('Delete'),
+                                    child: const Text(
+                                      'löschen',
+                                      style: TextStyle(color: Colors.yellow),
+                                    ),
                                     onPressed: () {
                                       setState(() {
                                         deleteNote(notes[index]['_id']);
@@ -217,106 +249,36 @@ class _NoteListState extends State<NoteList> {
           );
         },
       ),
-
-      // ListView.builder(
-      //   itemCount: notes.length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     print(notes);
-      //     final note = notes[index];
-
-      //     return GestureDetector(
-      //       onLongPress: () {
-      //         Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //                 builder: (context) => UpdateNotePage(
-      //                     id: notes[index]['_id'],
-      //                     title: notes[index]['title'],
-      //                     text: notes[index]['text'])));
-      //         // updateNotes(
-      //         //     notes[index]['_id'],
-      //         //     notes[index]['title'],
-      //         //     notes[index]['text'],
-      //         //     notes[index]['updatedAt']);
-      //         // Navigator.of(context).pop();
-      //       },
-      //       child: SizedBox(
-      //         height: 150,
-      //         child: Card(
-      //             color: const Color.fromARGB(255, 215, 195, 137),
-      //             child: Column(
-      //               children: [
-      //                 Text(
-      //                   notes[index]['title'],
-      //                   style: const TextStyle(
-      //                       color: Colors.black,
-      //                       fontWeight: FontWeight.bold,
-      //                       fontSize: 20),
-      //                 ),
-      //                 Text(
-      //                   notes[index]['text'],
-      //                   style: const TextStyle(color: Colors.black),
-      //                 ),
-      //                 Text(
-      //                   DateFormat("dd.MM.yyyy HH:mm")
-      //                       .format(DateTime.parse(notes[index]['createdAt'])),
-      //                   style: const TextStyle(color: Colors.black),
-      //                 ),
-      //                 IconButton(
-      //                   onPressed: () {
-      //                     showDialog(
-      //                       context: context,
-      //                       builder: (BuildContext context) {
-      //                         return AlertDialog(
-      //                           title: const Text('Delete note'),
-      //                           content: const Text(
-      //                               'Are you sure you want to delete this note?'),
-      //                           actions: <Widget>[
-      //                             TextButton(
-      //                               child: const Text('Cancel'),
-      //                               onPressed: () =>
-      //                                   Navigator.of(context).pop(),
-      //                             ),
-      //                             TextButton(
-      //                               child: const Text('Delete'),
-      //                               onPressed: () {
-      //                                 setState(() {
-      //                                   deleteNote(notes[index]['_id']);
-      //                                   Navigator.of(context).pop();
-      //                                   Navigator.push(
-      //                                     context,
-      //                                     MaterialPageRoute(
-      //                                         builder: (context) =>
-      //                                             const NoteList()),
-      //                                   );
-      //                                 });
-      //                               },
-      //                             ),
-      //                           ],
-      //                         );
-      //                       },
-      //                     );
-      //                   },
-      //                   icon: const Icon(
-      //                     Icons.delete,
-      //                     color: Colors.red,
-      //                   ),
-      //                 ),
-      //               ],
-      //             )),
-      //       ),
-      //     );
-      //   },
-      // ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 215, 195, 137),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateNotePage()),
-            );
-          },
-          child: const Icon(Icons.add)),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateNotePage()),
+          );
+        },
+        // Handle your butt(
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: <Color>[
+                Colors.orangeAccent,
+                Colors.yellowAccent,
+                Colors.yellow,
+                Colors.yellowAccent,
+                Colors.orangeAccent
+                //add more colors here.
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Container(
+            constraints: const BoxConstraints.expand(),
+            child: const Icon(Icons.add), // you can add your icon here
+          ),
+        ),
+      ),
     );
   }
 }
