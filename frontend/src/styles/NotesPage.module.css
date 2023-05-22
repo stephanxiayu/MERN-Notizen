@@ -36,3 +36,12 @@
     content: "";
     color: black;
 }
+
+.with100{
+    width:100%
+}
+.buttonGradient {
+    background: linear-gradient(90deg, #FFA500 0%, #FFFF00 50%, #FFA500 100%);
+    border: none;
+    color: black;
+}

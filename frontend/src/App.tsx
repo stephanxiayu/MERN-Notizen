@@ -8,6 +8,8 @@ import *as NotesApi from "./Network/notes_api";
 import AddNoteDialog from './components/add_note';
 import {FaPlus} from "react-icons/fa";
 import AddEditNoteDialog from './components/add_note';
+import SignUpModel from './components/form/signUpmodel';
+import LoginModal from './components/form/loginmodel';
 
 
 function App() {
@@ -118,6 +120,16 @@ className={`${styles.mb4} ${styles.blockCenter} ${styles.flexCenter}`} onClick={
           }}
           />
           }
+          {false&&
+          <SignUpModel
+          onDismiss={()=>{}}
+          onSignUpSuccessful={()=>{}}
+          />}
+           {true&&
+          <LoginModal
+          onDismiss={()=>{}}
+          onLonginSuccessful={()=>{}}
+          />}
           </Container>
           </>
           );

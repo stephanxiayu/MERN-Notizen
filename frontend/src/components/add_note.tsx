@@ -62,18 +62,17 @@ const AddEditNoteDialog = ({noteToEdit, onDismiss, onNoteSaved}: AddEditNoteprob
         registerOption={{required:"Required"}}
         error={errors.title}
         />
-   
-
-<Form.Group className="mb-3">
-    <Form.Label>Text</Form.Label>
-    <Form.Control
-    as="textarea"
-    rows={6}
+   <TextInputField
+   name="text"
+   label="Text"
+   as="textarea"
+    rows={5}
     placeholder="Text"
-    {...register("text")}
-    />
+    register={register}
+   
+   />
 
-</Form.Group>
+
 
     </Form>
 </Modal.Body>
