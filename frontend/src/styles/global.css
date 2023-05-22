@@ -1,7 +1,7 @@
 body {
   margin: 30;
   background-color:black;
-  background-image: url('../assets/test.jpg');
+  background-image: url('../assets/office.png');
   width:100%;
   height:100%; 
 
@@ -19,4 +19,9 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.button-gradient {
+  background: linear-gradient(90deg, orangeAccent 0%, yellowAccent 50%, orangeAccent 100%);
+  border: none; /* you may not need this depending on your overall styles */
 }

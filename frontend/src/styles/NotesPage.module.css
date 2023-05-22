@@ -27,3 +27,12 @@
     justify-content:center;
     gap: 4px;
 }
+.buttonGradient {
+    background: linear-gradient(90deg, #FFA500 0%, #FFFF00 50%, #FFA500 100%);
+    border: none;
+}
+
+.buttonGradient::after {
+    content: "";
+    color: black;
+}

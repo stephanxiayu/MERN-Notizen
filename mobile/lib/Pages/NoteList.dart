@@ -134,121 +134,134 @@ class _NoteListState extends State<NoteList> {
               ))
         ],
       ),
-      body: GridView.builder(
-        itemCount: notes.length,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          final note = notes[index];
-          return GestureDetector(
-            onLongPress: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UpdateNotePage(
-                          id: notes[index]['_id'],
-                          title: notes[index]['title'],
-                          text: notes[index]['text'])));
-              // updateNotes(
-              //     notes[index]['_id'],
-              //     notes[index]['title'],
-              //     notes[index]['text'],
-              //     notes[index]['updatedAt']);
-              // Navigator.of(context).pop();
-            },
-            child: Card(
-              color: const Color.fromARGB(255, 215, 195, 137),
-              child: GridTile(
-                header: Text(
-                  notes[index]['title'],
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-                footer: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        DateFormat("dd.MM.yyyy HH:mm")
-                            .format(DateTime.parse(notes[index]['createdAt'])),
-                        style: TextStyle(
-                            color: Colors.grey.shade800, fontSize: 12),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.black87,
-                                title: const Text(
-                                  'Notiz löschen?',
-                                  style: TextStyle(color: Colors.yellowAccent),
-                                ),
-                                content: const Text(
-                                    'Bist du sicher, dass du die Notiz löschen möchtest'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text(
-                                      'abbrechen',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                  ),
-                                  TextButton(
-                                    child: const Text(
-                                      'löschen',
-                                      style: TextStyle(color: Colors.yellow),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        deleteNote(notes[index]['_id']);
-                                        Navigator.of(context).pop();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const NoteList()),
-                                        );
-                                      });
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          color: Colors.grey.shade900,
-                          size: 20,
-                        ),
-                      )
-                    ],
+      body: Stack(children: [
+        // This is your background picture.
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  "assets/office2.jpg"), // Change this to your image path.
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        GridView.builder(
+          itemCount: notes.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
+          itemBuilder: (BuildContext context, int index) {
+            final note = notes[index];
+            return GestureDetector(
+              onLongPress: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateNotePage(
+                            id: notes[index]['_id'],
+                            title: notes[index]['title'],
+                            text: notes[index]['text'])));
+                // updateNotes(
+                //     notes[index]['_id'],
+                //     notes[index]['title'],
+                //     notes[index]['text'],
+                //     notes[index]['updatedAt']);
+                // Navigator.of(context).pop();
+              },
+              child: Card(
+                color: const Color.fromARGB(255, 215, 195, 137),
+                child: GridTile(
+                  header: Text(
+                    notes[index]['title'],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
                   ),
-                ),
-                child: Center(
-                  child: Padding(
+                  footer: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      notes[index]['text'],
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormat("dd.MM.yyyy HH:mm").format(
+                              DateTime.parse(notes[index]['createdAt'])),
+                          style: TextStyle(
+                              color: Colors.grey.shade800, fontSize: 12),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.black87,
+                                  title: const Text(
+                                    'Notiz löschen?',
+                                    style:
+                                        TextStyle(color: Colors.yellowAccent),
+                                  ),
+                                  content: const Text(
+                                      'Bist du sicher, dass du die Notiz löschen möchtest'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text(
+                                        'abbrechen',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                    ),
+                                    TextButton(
+                                      child: const Text(
+                                        'löschen',
+                                        style: TextStyle(color: Colors.yellow),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          deleteNote(notes[index]['_id']);
+                                          Navigator.of(context).pop();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const NoteList()),
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.grey.shade900,
+                            size: 20,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        notes[index]['text'],
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        ),
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

@@ -69,10 +69,18 @@ function App() {
         </div>
       }
       <Container >
-        <Button  className={`mb-4 ${styles.blockCenter} ${styles.flexCenter}`}  variant="secondary" size="lg" active onClick={()=>setShowAddNoteDialog(true)}>
-          <FaPlus/>
-          Notiz hinzufügen
-        </Button>
+      <button style={{
+    background: 'linear-gradient(90deg, #FFA500 0%, #FFFF00 50%, #FFA500 100%)',
+    border: 'none',
+    color: 'black',
+    padding: '10px 20px',
+}}
+className={`${styles.mb4} ${styles.blockCenter} ${styles.flexCenter}`} onClick={()=>setShowAddNoteDialog(true)}>
+    <FaPlus/>
+    Notiz hinzufügen
+</button>
+
+
         {showNotesLoadingError&&<p style={{ color: 'red', fontSize: 30 }}>
           Something went wrong! Well, shit happens... 
         </p> }

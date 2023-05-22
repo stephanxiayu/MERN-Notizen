@@ -32,3 +32,7 @@ margin:5px;
     justify-content:right;
     gap: 4px;
 }
+.button-gradient {
+    background: linear-gradient(90deg, orangeAccent 0%, yellowAccent 50%, orangeAccent 100%);
+    border: none; /* you may not need this depending on your overall styles */
+  }
