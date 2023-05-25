@@ -1,7 +1,8 @@
-import 'dart:convert';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile/Pages/LoginPage.dart';
 import 'package:mobile/Pages/createNotePage.dart';
 import 'package:intl/intl.dart';
@@ -17,79 +18,91 @@ class NoteList extends StatefulWidget {
 
 class _NoteListState extends State<NoteList> {
   List<dynamic> notes = [];
-
+  Dio dio = Dio();
   @override
   void initState() {
     super.initState();
     fetchNotes();
+    dio.interceptors.add(CookieManager(CookieJar()));
   }
 
   Future<void> fetchNotes() async {
-    const url = 'http://localhost:8080/api/notes';
-    final response = await http.get(Uri.parse(url));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+
+    if (userId == null) {
+      // Handle case when userId is not available
+      print("userId: $userId");
+      return;
+    }
+
+    print("userId: $userId");
+
+    final url = 'http://localhost:8080/api/notes?userId=$userId';
+
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          final sessionCookie = prefs.getString('sessionCookie');
+          options.headers['Cookie'] = sessionCookie;
+          return handler.next(options);
+        },
+      ),
+    );
+
+    final response = await dio.get(url);
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
+      print("userId: $userId");
+      final List<dynamic> data = List<dynamic>.from(response.data);
       setState(() {
         notes = data;
       });
     } else {
       throw Exception('Failed to fetch notes');
+      print("userId: $userId");
     }
+    print("userId: $userId");
   }
 
   Future<void> _logout() async {
-    const url =
-        'http://localhost:8080/api/user/logout'; // replace with your server URL
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
+    const url = 'http://localhost:8080/api/user/logout';
+    final response = await dio.post(url);
 
     if (response.statusCode == 200) {
-      // Removes the user token from storage
-
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', false);
-
-      // After removing the token, you could navigate the user to the login page
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => const LoginForm()));
       print('Logged out successfully');
     } else {
-      // If the server did not return a 200 OK response,
-      print(response.body);
-      print(response.statusCode);
       throw Exception('Failed to logout');
     }
   }
 
   Future<void> deleteNote(String id) async {
-    final url = Uri.parse('http://localhost:8080/api/notes/$id');
-    final response = await http.delete(url);
+    final url = 'http://localhost:8080/api/notes/$id';
+    final response = await dio.delete(url);
 
     if (response.statusCode == 204) {
       Fluttertoast.showToast(
           msg: 'Note gelöscht ',
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
+          backgroundColor: Colors.amber,
+          textColor: Colors.black,
           fontSize: 16.0);
     } else {
       Fluttertoast.showToast(
           msg: 'Fehler in der Matrix',
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
           backgroundColor: Colors.red,
-          textColor: Colors.white,
+          textColor: Colors.black,
           fontSize: 16.0);
     }
   }
@@ -219,8 +232,9 @@ class _NoteListState extends State<NoteList> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          deleteNote(notes[index]['_id']);
-                                          Navigator.of(context).pop();
+                                          deleteNote(notes[index]['_id'])
+                                              .then((value) => setState(() {}));
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

@@ -1,8 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Pages/NoteList.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 
 class CreateNotePage extends StatefulWidget {
   String? title;
@@ -20,32 +20,35 @@ class CreateNotePage extends StatefulWidget {
 
 class _CreateNotePageState extends State<CreateNotePage> {
   List<dynamic> notes = [];
-
   Future<void> createNote(String title, String text) async {
+    Dio dio = Dio();
     const url = 'http://localhost:8080/api/notes';
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
+    final response = await dio.post(
+      url,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ),
+      data: jsonEncode({
         'title': title,
         'text': text,
       }),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final Map<String, dynamic> data = json.decode(response.body);
+      final Map<String, dynamic> data =
+          Map<String, dynamic>.from(response.data);
       setState(() {
         notes.add(data);
       });
       Fluttertoast.showToast(
           msg: 'Note created ',
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
+          backgroundColor: Colors.yellow,
+          textColor: Colors.black,
           fontSize: 16.0);
     } else {
       Fluttertoast.showToast(

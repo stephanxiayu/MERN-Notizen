@@ -41,6 +41,9 @@ dependencies:
   intl: ^0.18.0
   shared_preferences: ^2.1.1
   motion_toast: ^2.6.8
+  dio: ^5.0.0
+  dio_cookie_manager: ^2.1.0
+  cookie_jar: ^3.0.0
 
 dev_dependencies:
   flutter_test:

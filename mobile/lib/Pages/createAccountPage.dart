@@ -1,7 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile/Pages/LoginPage.dart';
-import 'dart:convert';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:mobile/Pages/NoteList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,16 +19,18 @@ class _CreateAccountState extends State<CreateAccount> {
   final _passwordController = TextEditingController();
 
   Future<void> signIn() async {
+    Dio dio = Dio();
     const url =
         'http://localhost:8080/api/user/signup'; // replace with your server URL
-    final response = await http.post(
-      Uri.parse(url),
-      body: jsonEncode({
+
+    final response = await dio.post(
+      url,
+      data: {
         'username': _usernameController.text.trim(),
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
-      }),
-      headers: {'Content-Type': 'application/json'},
+      },
+      options: Options(contentType: Headers.jsonContentType),
     );
 
     if (response.statusCode == 201) {

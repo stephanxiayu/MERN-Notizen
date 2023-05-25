@@ -1,11 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:mobile/Pages/createAccountPage.dart';
-import 'dart:convert';
+import 'package:mobile/Pages/NoteList.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'NoteList.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -19,30 +16,30 @@ class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  Dio dio = Dio();
 
   Future<void> _login() async {
-    const url =
-        'http://localhost:8080/api/user/login'; // replace with your server URL
-    final response = await http.post(
-      Uri.parse(url),
-      body: jsonEncode({
+    const url = 'http://localhost:8080/api/user/login';
+    final response = await dio.post(
+      url,
+      data: {
         'username': _usernameController.text.trim(),
-        // 'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
-      }),
-      headers: {'Content-Type': 'application/json'},
+      },
     );
 
     if (response.statusCode == 201) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
-      Navigator.push(
+      await prefs.setString('userId', response.data['_id']);
+      await prefs.setString(
+          'sessionCookie', response.headers['set-cookie']![0]);
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const NoteList(),
-          ));
-      print('Logged in successfully');
+              builder: (BuildContext context) => const NoteList()));
     } else {
+      print('Login failed with error: ${response.data}');
       throw Exception('Failed to login');
       motionToastLoginError();
     }
@@ -197,7 +194,7 @@ class _LoginFormState extends State<LoginForm> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const CreateAccount(),
+                                builder: (context) => const LoginForm(),
                               ));
                         },
                         style: ElevatedButton.styleFrom(
