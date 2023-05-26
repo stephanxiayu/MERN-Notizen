@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Pages/NoteList.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateNotePage extends StatefulWidget {
   String? title;
@@ -22,6 +23,27 @@ class _CreateNotePageState extends State<CreateNotePage> {
   List<dynamic> notes = [];
   Future<void> createNote(String title, String text) async {
     Dio dio = Dio();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    final sessionCookie = prefs.getString('sessionCookie');
+
+    if (userId == null) {
+      // Handle case when userId is not available
+      print("userId: $userId");
+      return;
+    }
+
+    print("userId: $userId");
+
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.headers['Cookie'] = sessionCookie;
+          return handler.next(options);
+        },
+      ),
+    );
+
     const url = 'http://localhost:8080/api/notes';
     final response = await dio.post(
       url,
@@ -31,6 +53,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
         },
       ),
       data: jsonEncode({
+        'userId': userId,
         'title': title,
         'text': text,
       }),
@@ -49,16 +72,16 @@ class _CreateNotePageState extends State<CreateNotePage> {
           timeInSecForIosWeb: 3,
           backgroundColor: Colors.yellow,
           textColor: Colors.black,
-          fontSize: 16.0);
+          fontSize: 20.0);
     } else {
       Fluttertoast.showToast(
           msg: 'Failed to create note',
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
           backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+          textColor: Colors.black,
+          fontSize: 20.0);
     }
   }
 

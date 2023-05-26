@@ -66,11 +66,22 @@ class _NoteListState extends State<NoteList> {
   }
 
   Future<void> _logout() async {
-    const url = 'http://localhost:8080/api/user/logout';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+
+    if (userId == null) {
+      // Handle case when userId is not available
+      print("userId: $userId");
+      return;
+    }
+
+    print("userId: $userId");
+
+    final url = 'http://localhost:8080/api/user/logout?userId=$userId';
+
     final response = await dio.post(url);
 
     if (response.statusCode == 200) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', false);
       Navigator.pushReplacement(
           context,
@@ -83,7 +94,19 @@ class _NoteListState extends State<NoteList> {
   }
 
   Future<void> deleteNote(String id) async {
-    final url = 'http://localhost:8080/api/notes/$id';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+
+    if (userId == null) {
+      // Handle case when userId is not available
+      print("userId: $userId");
+      return;
+    }
+
+    print("userId: $userId");
+
+    final url = 'http://localhost:8080/api/notes/$id?userId=$userId';
+
     final response = await dio.delete(url);
 
     if (response.statusCode == 204) {
@@ -173,23 +196,21 @@ class _NoteListState extends State<NoteList> {
                             id: notes[index]['_id'],
                             title: notes[index]['title'],
                             text: notes[index]['text'])));
-                // updateNotes(
-                //     notes[index]['_id'],
-                //     notes[index]['title'],
-                //     notes[index]['text'],
-                //     notes[index]['updatedAt']);
-                // Navigator.of(context).pop();
               },
               child: Card(
+                elevation: 9,
                 color: const Color.fromARGB(255, 215, 195, 137),
                 child: GridTile(
-                  header: Text(
-                    notes[index]['title'],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                  header: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      notes[index]['title'],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
                   ),
                   footer: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -231,16 +252,12 @@ class _NoteListState extends State<NoteList> {
                                         style: TextStyle(color: Colors.yellow),
                                       ),
                                       onPressed: () {
-                                        setState(() {
-                                          deleteNote(notes[index]['_id'])
-                                              .then((value) => setState(() {}));
-
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const NoteList()),
-                                          );
+                                        deleteNote(notes[index]['_id'])
+                                            .then((value) {
+                                          setState(() {
+                                            notes.removeAt(index);
+                                          });
+                                          Navigator.of(context).pop();
                                         });
                                       },
                                     ),
@@ -251,7 +268,7 @@ class _NoteListState extends State<NoteList> {
                           },
                           icon: Icon(
                             Icons.delete,
-                            color: Colors.grey.shade900,
+                            color: Colors.grey.shade700,
                             size: 20,
                           ),
                         )
@@ -302,7 +319,7 @@ class _NoteListState extends State<NoteList> {
           ),
           child: Container(
             constraints: const BoxConstraints.expand(),
-            child: const Icon(Icons.add), // you can add your icon here
+            child: const Icon(Icons.create), // you can add your icon here
           ),
         ),
       ),

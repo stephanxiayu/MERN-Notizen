@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Pages/NoteList.dart';
+import 'package:mobile/Pages/createAccountPage.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -194,7 +195,7 @@ class _LoginFormState extends State<LoginForm> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const LoginForm(),
+                                builder: (context) => const CreateAccount(),
                               ));
                         },
                         style: ElevatedButton.styleFrom(

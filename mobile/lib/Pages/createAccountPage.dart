@@ -36,6 +36,9 @@ class _CreateAccountState extends State<CreateAccount> {
     if (response.statusCode == 201) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userId', response.data['_id']);
+      await prefs.setString(
+          'sessionCookie', response.headers['set-cookie']![0]);
       Navigator.push(
           context,
           MaterialPageRoute(
