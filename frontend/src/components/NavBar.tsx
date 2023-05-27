@@ -6,6 +6,7 @@ import NavBarLoggedoutView from "./NavBarLoggedoutView";
 import {Link} from "react-router-dom"
 
 
+
 interface NavBarProps{
     loggedInUser:User|null
     onSignUpClicked:()=>void
@@ -32,18 +33,24 @@ const NavBar =({loggedInUser,onSignUpClicked, onLoginClicked, onLogoutSuccessful
                         ?<NavBarLoggedInview  user={loggedInUser} onLogoutSuccessful={onLogoutSuccessful}/>
                         : <NavBarLoggedoutView onLoginClicked={onLoginClicked} onSignUpClicked={onSignUpClicked}/>
                     }
-                    <Button style={{ background: 'linear-gradient(90deg, #FFA500 0%, #FFFF00 50%, #FFA500 100%)', border: 'none' }}>
-        <Nav.Link  >
+                    {/* <Button style={{ background: 'linear-gradient(90deg, #FFA500 0%, #FFFF00 50%, #FFA500 100%)', border: 'none' }}> */}
+        {/* <Nav.Link  >
             <Link to={"/Datenschutz"} style={{ color: 'black' }}>
             Datenschutz
             </Link>
         </Nav.Link>
-    </Button>     
+        <Nav.Link  >
+            <Link to={"/Kontakt"} style={{ color: 'black' }}>
+            Kontakt
+            </Link>
+        </Nav.Link> */}
+    {/* </Button>      */}
                     </Nav>
                 </Navbar.Collapse>
                
             </Container>
         </Navbar>
+         
     )
 }
 export default NavBar

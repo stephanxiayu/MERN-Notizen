@@ -17,7 +17,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NotesPage from './Pages/notespage';
 import DatenschutzPage from './Pages/DatenschutzPage';
 import NotFoundPage from './Pages/NotFoundPage';
-
+import Kontakt from './Pages/Kontakt';
+import Footer from './components/FooterBar'; 
 
 function App() {
 
@@ -39,54 +40,57 @@ useEffect(()=>{
   fetchLoggedInUser()
 },[])
   
-  return (
-    
-      <BrowserRouter>
+return (
 
-      <div>
-        <NavBar
-        loggedInUser={loggedInUser}
-        onLoginClicked={()=>setShowLoginModal(true)}
-        onSignUpClicked={()=>setShowSignUpModal(true)}
-        onLogoutSuccessful={()=>setLoggedInUser(null)}
+  <BrowserRouter>
 
-
-        />
-      <Container >
-       <Routes>
-        <Route
-        path='/'
-        element={<NotesPage loggedInUser={loggedInUser}/>}
-        />
-        <Route
-        path='/Datenschutz'
-        element={<DatenschutzPage />}
-        />
-        <Route 
-        path='/*'
-        element={<NotFoundPage/>}
-        />
-       </Routes>
-          </Container>
-          {showSignUpModal&&
-          <SignUpModel
-          onDismiss={()=>setShowSignUpModal(false)}
-          onSignUpSuccessful={(user)=>{
-            setLoggedInUser(user)
-            setShowSignUpModal(false)
-          }}
-          />}
-           {showLoginUpModal&&
-          <LoginModal
-          onDismiss={()=>setShowLoginModal(false)}
-          onLonginSuccessful={(user)=>{ setLoggedInUser(user)
-          setShowLoginModal(false)
-          }}
-          />}
-          </div>
-          </BrowserRouter>
-          );
-          }
-          
-          export default App;
+  <div>
+    <NavBar
+    loggedInUser={loggedInUser}
+    onLoginClicked={()=>setShowLoginModal(true)}
+    onSignUpClicked={()=>setShowSignUpModal(true)}
+    onLogoutSuccessful={()=>setLoggedInUser(null)}
+    />
+  <Container >
+   <Routes>
+    <Route
+    path='/'
+    element={<NotesPage loggedInUser={loggedInUser}/>}
+    />
+    <Route
+    path='/Datenschutz'
+    element={<DatenschutzPage />}
+    />
+     <Route
+    path='/Kontakt'
+    element={<Kontakt />}
+    />
+    <Route 
+    path='/*'
+    element={<NotFoundPage/>}
+    />
+   </Routes>
+  </Container>
+  <Footer /> {/* Add this line here */}
+  {showSignUpModal &&
+  <SignUpModel
+  onDismiss={()=>setShowSignUpModal(false)}
+  onSignUpSuccessful={(user)=>{
+    setLoggedInUser(user)
+    setShowSignUpModal(false)
+  }}
+  />}
+   {showLoginUpModal&&
+  <LoginModal
+  onDismiss={()=>setShowLoginModal(false)}
+  onLonginSuccessful={(user)=>{ setLoggedInUser(user)
+  setShowLoginModal(false)
+  }}
+  />}
+  </div>
+  </BrowserRouter>
+  );
+  }
+  
+  export default App;
           
