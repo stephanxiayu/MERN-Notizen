@@ -21,7 +21,7 @@ class _CreateAccountState extends State<CreateAccount> {
   Future<void> signIn() async {
     Dio dio = Dio();
     const url =
-        'http://localhost:8080/api/user/signup'; // replace with your server URL
+        'https://meine-notizen.com/api/user/signup'; // replace with your server URL
 
     final response = await dio.post(
       url,

@@ -40,7 +40,7 @@ class _UpdateNotePageState extends State<UpdateNotePage> {
       ),
     );
 
-    final url = 'http://localhost:8080/api/notes/$id';
+    final url = 'https://meine-notizen.com/api/notes/$id';
     final response = await dio.patch(
       url,
       options: Options(

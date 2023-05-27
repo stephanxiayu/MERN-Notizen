@@ -20,7 +20,7 @@ class _LoginFormState extends State<LoginForm> {
   Dio dio = Dio();
 
   Future<void> _login() async {
-    const url = 'http://localhost:8080/api/user/login';
+    const url = 'https://meine-notizen.com/api/user/login';
     final response = await dio.post(
       url,
       data: {

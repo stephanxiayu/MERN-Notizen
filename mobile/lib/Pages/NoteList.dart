@@ -38,7 +38,7 @@ class _NoteListState extends State<NoteList> {
 
     print("userId: $userId");
 
-    final url = 'http://localhost:8080/api/notes?userId=$userId';
+    final url = 'https://meine-notizen.com/api/notes?userId=$userId';
 
     dio.interceptors.add(
       InterceptorsWrapper(
@@ -77,7 +77,7 @@ class _NoteListState extends State<NoteList> {
 
     print("userId: $userId");
 
-    final url = 'http://localhost:8080/api/user/logout?userId=$userId';
+    final url = 'https://meine-notizen.com/api/user/logout?userId=$userId';
 
     final response = await dio.post(url);
 
@@ -105,7 +105,7 @@ class _NoteListState extends State<NoteList> {
 
     print("userId: $userId");
 
-    final url = 'http://localhost:8080/api/notes/$id?userId=$userId';
+    final url = 'https://meine-notizen.com/api/notes/$id?userId=$userId';
 
     final response = await dio.delete(url);
 

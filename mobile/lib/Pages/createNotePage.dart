@@ -44,7 +44,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
       ),
     );
 
-    const url = 'http://localhost:8080/api/notes';
+    const url = 'https://meine-notizen.com/api/notes';
     final response = await dio.post(
       url,
       options: Options(
