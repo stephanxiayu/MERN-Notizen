@@ -12,8 +12,11 @@ import SignUpModel from './components/form/signUpmodel';
 import LoginModal from './components/form/loginmodel';
 import NavBar from './components/NavBar';
 import { User } from './models/user';
-import NotePageLoggedin from './components/NotePageLoggedin';
-import NotePageLoggedoutview from './components/NotePageLoggedoutview';
+
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import NotesPage from './Pages/notespage';
+import DatenschutzPage from './Pages/DatenschutzPage';
+import NotFoundPage from './Pages/NotFoundPage';
 
 
 function App() {
@@ -37,12 +40,8 @@ useEffect(()=>{
 },[])
   
   return (
-    <>
-      {/* {notesLoading &&
-        <div className="progress" style={{ position: 'fixed', top: 0, width: '100%', height: '4px', backgroundColor: 'darkgrey', zIndex: 9999 }}>
-          <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style={{ width: '100%', backgroundColor: 'red' }}></div>
-        </div>
-      } */}
+    
+      <BrowserRouter>
 
       <div>
         <NavBar
@@ -54,13 +53,20 @@ useEffect(()=>{
 
         />
       <Container >
-          <>
-          {loggedInUser?
-          <NotePageLoggedin/>
-          : <NotePageLoggedoutview/>
-          }
-          </>
-         
+       <Routes>
+        <Route
+        path='/'
+        element={<NotesPage loggedInUser={loggedInUser}/>}
+        />
+        <Route
+        path='/Datenschutz'
+        element={<DatenschutzPage />}
+        />
+        <Route 
+        path='/*'
+        element={<NotFoundPage/>}
+        />
+       </Routes>
           </Container>
           {showSignUpModal&&
           <SignUpModel
@@ -78,7 +84,7 @@ useEffect(()=>{
           }}
           />}
           </div>
-          </>
+          </BrowserRouter>
           );
           }
           
