@@ -22,7 +22,7 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     cookie:{
-        maxAge:60*60*1000,
+        maxAge:100*1000*1000,
     },rolling:true,
     store:MongoStore.create({
         mongoUrl:env.Mongo_CONNECTION_STRING
